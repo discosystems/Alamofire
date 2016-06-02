@@ -391,8 +391,12 @@ public class Manager {
             didReceiveChallenge challenge: NSURLAuthenticationChallenge,
             completionHandler: ((NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void))
         {
+            var disposition: NSURLSessionAuthChallengeDisposition = .PerformDefaultHandling
+            var credential: NSURLCredential?
+
             if let taskDidReceiveChallenge = taskDidReceiveChallenge {
-                completionHandler(taskDidReceiveChallenge(session, task, challenge))
+                (disposition, credential) = taskDidReceiveChallenge(session, task, challenge)
+                completionHandler(disposition, credential)
             } else if let delegate = self[task] {
                 delegate.URLSession(
                     session,
